@@ -1,15 +1,22 @@
 from .toolbar import Toolbar
 from .selection_manager import SelectionManager
 
+ADD_POINT = "Add Point"
+MOVE_SPLIT = "Move / Split"
+DELETE_POINT = "Delete Point"
+FLIP = "Flip"
+CLEAR = "Clear"
+EXPORT_TIKZ = "Export TikZ"
+
 class UIManager:
     def __init__(self):
         self.toolbar = Toolbar([
-            "Add Point",
-            "Move / Split",
-            "Delete Point",
-            "Flip",
-            "Clear",
-            "Export TikZ",
+            ADD_POINT,
+            MOVE_SPLIT,
+            DELETE_POINT,
+            FLIP,
+            CLEAR,
+            EXPORT_TIKZ,
         ])
         self.selection = SelectionManager()
 

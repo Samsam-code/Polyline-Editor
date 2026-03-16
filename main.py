@@ -2,7 +2,15 @@ import pygame
 import sys
 
 from core.geometry_manager import GeometryManager, is_near_edge
-from ui.ui_manager import UIManager
+from ui.ui_manager import (
+    UIManager,
+    ADD_POINT,
+    MOVE_SPLIT,
+    DELETE_POINT,
+    FLIP,
+    CLEAR,
+    EXPORT_TIKZ,
+)
 from rendering.renderer import Renderer
 from utils.settings import WIDTH, HEIGHT
 from core.flip_types import (
@@ -39,16 +47,16 @@ def main():
 
                 # is it on toolbar?
                 if ui.handle_click(pos):
-                    if ui.current_mode == "Clear":
+                    if ui.current_mode == CLEAR:
                         gm.points = []
-                        ui.set_mode("Add Point")
+                        ui.set_mode(ADD_POINT)
 
-                    elif ui.current_mode == "Export TikZ":
+                    elif ui.current_mode == EXPORT_TIKZ:
                         latex = gm.export_to_tikz()
                         with open("polyline.tex", "w") as f:
                             f.write(latex)
                         print("Exported to polyline.tex")
-                        ui.set_mode("Move / Split")
+                        ui.set_mode(MOVE_SPLIT)
 
                     ui.selection.clear()
                     ui.selection.clear_hover()
@@ -57,7 +65,7 @@ def main():
 
                 mode = ui.current_mode
 
-                if mode == "Move / Split":
+                if mode == MOVE_SPLIT:
                     p = gm.get_point_at(pos)
                     if p:
                         ui.selection.select_point(p)
@@ -71,12 +79,12 @@ def main():
                         else:
                             ui.selection.clear()
 
-                elif mode == "Add Point":
+                elif mode == ADD_POINT:
                     p = gm.append_point(*pos)
                     ui.selection.select_point(p)
                     continue
 
-                elif mode == "Delete Point":
+                elif mode == DELETE_POINT:
                     p = gm.get_point_at(pos)
                     if p:
                         gm.delete_point(p)
@@ -84,7 +92,7 @@ def main():
                         continue
 
 
-                elif mode == "Flip":
+                elif mode == FLIP:
                     # Step 1: if no base edge selected yet
                     if ui.selection.flip_base_index is None:
                         edge_index = gm.get_edge_at(pos)
@@ -125,7 +133,7 @@ def main():
                 else:
                     ui.selection.clear_hover()
 
-                    if mode in {"Move / Split", "Delete Point"}:
+                    if mode in {MOVE_SPLIT, DELETE_POINT}:
                         # hover points
                         p = gm.get_point_at(pos)
                         if p:
@@ -133,7 +141,7 @@ def main():
                         else:
                             ui.selection.hover_point = None
 
-                    if mode in {"Move / Split", "Flip"}:
+                    if mode in {MOVE_SPLIT, FLIP}:
                         # hover edges
                         edge_index = gm.get_edge_at(pos)
                         if edge_index is not None:
