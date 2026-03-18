@@ -112,6 +112,9 @@ class GeometryManager:
 
         # Define the points
         lines.append("\n% Define points")
+        config = [p.pos for p in self.points]
+        print("Configuration:", config)
+        lines.append("% "+str(config))
         for i, p in enumerate(self.points):
             lines.append(f"\\coordinate (p{i+1}) at ({p.x/scale:.2f},{p.y/scale:.2f});")
 
