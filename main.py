@@ -1,7 +1,7 @@
 import pygame
 import sys
 
-from core.geometry_manager import GeometryManager, is_near_edge
+from core.geometry_manager import GeometryManager, dist2_to_edge
 from ui.ui_manager import (
     UIManager,
     ADD_POINT,
@@ -113,11 +113,18 @@ def main():
                         continue
 
                     # Step 2: base edge already selected -> choose candidate
+                    best_ft = None
+                    best_dist2 = float("inf")
+
                     for flip_type, (p1, p2) in ui.selection.flip_candidates:
-                        if is_near_edge(pos, p1, p2):
-                            gm.flip(ui.selection.flip_base_index, flip_type)
-                            ui.selection.clear_flip()
-                            break
+                        dist2 = dist2_to_edge(pos, p1, p2)
+                        if dist2 < best_dist2:
+                            best_ft, best_dist2 = flip_type, dist2
+
+                    if best_ft is not None and best_dist2 <= 49:
+                        gm.flip(ui.selection.flip_base_index, best_ft)
+                        ui.selection.clear_flip()
+                        break
 
             # --- mouse up ---
             elif event.type == pygame.MOUSEBUTTONUP:

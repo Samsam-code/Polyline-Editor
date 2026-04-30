@@ -115,8 +115,11 @@ class GeometryManager:
         config = [p.pos for p in self.points]
         print("Configuration:", config)
         lines.append("% "+str(config))
+
+        # We center the figure around p0 and we flip the y-axis since in tikz the display is reversed
+        p0 = self.points[0]
         for i, p in enumerate(self.points):
-            lines.append(f"\\coordinate (p{i+1}) at ({p.x/scale:.2f},{p.y/scale:.2f});")
+            lines.append(f"\\coordinate (p{i+1}) at ({(p.x-p0.x)/scale:.2f},{(p0.y-p.y)/scale:.2f});")
 
         # Draw polyline
         lines.append("\n% Path edges")
@@ -130,7 +133,7 @@ class GeometryManager:
         lines.append("\\foreach \\p/\\name in {"+
                      ", ".join([f"p{i+1}/$p_{{{i+1}}}$" for i in range(len(self.points))])+
                      "}")
-        lines.append("    \\filldraw[black] \\p circle (2pt); %node[above] {\\name};\n")
+        lines.append("    \\filldraw[black] (\\p) circle (2pt); %node[above] {\\name};\n")
 
         # End TikZ
         lines.append("\\end{tikzpicture}\n")
