@@ -31,8 +31,10 @@ class GeometryManager:
     Manages a single polyline as an ordered list of Point objects.
     Edges are implicit between consecutive points.
     """
-    def __init__(self):
+    def __init__(self, points = []):
         self.points = []
+        for x,y in points:
+            self.append_point(x, y)
 
     @property
     def edges(self):
