@@ -23,6 +23,12 @@ def generate_random_convex2_points(max_n, w=50, h=30):
     return points
 
 def convex2_to_canonical(points, path):
+    """ This function returns a flip sequence that transforms the ``path`` on a 2-layer point set into
+    a canonical path: a path that visits all the points of one layer in a circular order, and then 
+    the other layer, again in circular order. 
+    
+    ``points`` is a list of coordinates and ``path`` is a list of indices that refer to points in ``points``.
+    """
     flip_sequence = []
 
     def perform_flip(i, flip_type):
